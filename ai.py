@@ -1,7 +1,7 @@
 import gradio as gr
 import difflib
 
-# Predefined Q&A data
+# Predefined FAQ data
 faq_data = [
     {
         "question": "What does the eligibility verification agent (EVA) do?",
@@ -25,29 +25,30 @@ faq_data = [
     }
 ]
 
-# Fallback response for unknown questions
+# Default fallback message
 fallback_response = "I'm sorry, I couldn't find a specific answer to that. Please reach out to our support team for more information."
 
-def get_answer(user_input):
-    # Get list of all known questions
+# Chatbot response function (updated for Gradio v4.x format)
+def get_answer(messages, history=None):
+    user_input = messages[-1]["content"]
     questions = [item["question"] for item in faq_data]
-
-    # Find the closest matching question (case-insensitive)
     closest_matches = difflib.get_close_matches(user_input.lower(), [q.lower() for q in questions], n=1, cutoff=0.5)
 
     if closest_matches:
-        # Find original casing of the matched question
         matched_question = next(q for q in questions if q.lower() == closest_matches[0])
-        # Find the corresponding answer
         for item in faq_data:
             if item["question"] == matched_question:
                 return item["answer"]
     else:
         return fallback_response
 
-# Set up Gradio interface
-chat = gr.ChatInterface(fn=get_answer, title="Thoughtful AI Agent", chatbot=gr.Chatbot())
+# Gradio interface
+chat = gr.ChatInterface(
+    fn=get_answer,
+    chatbot=gr.Chatbot(type="messages"),
+    title="Thoughtful AI Agent"
+)
 
-# Launch app
+# Launch with shareable public link
 if __name__ == "__main__":
-    chat.launch()
+    chat.launch(share=True)
