@@ -12,4 +12,5 @@ This is a simple conversational AI chatbot built with Gradio. It answers common 
 
 ### Clone this repository:
 ```bash
-
+git clone https://github.com/Benjamin-bt-web/Thoughtful-AI-Chatbot.git
+cd Thoughtful-AI-Chatbot
